@@ -47,6 +47,14 @@ def load(f_name):
     f.close()
     return obj
 
+# Convert startTime to seconds
+# e.g., '2016-03-22 01:15:00.000' => 4500.0
+def convStartTimeToSec(startTime):
+    secVal = float(startTime.split(' ')[1].split(':')[0]) * (60 ** 2) + \
+    float(startTime.split(' ')[1].split(':')[1]) * 60 + \
+    float(startTime.split(' ')[1].split(':')[2])
+    return secVal
+
 def rand_x(p):
     """
     Generate a random variable in 0, 1, ..., (N-1) given a distribution vector p
