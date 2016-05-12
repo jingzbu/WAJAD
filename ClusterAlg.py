@@ -6,7 +6,6 @@ cf. https://github.com/hbhzwj/GAD/blob/eadf9fe5c8749bb7c091c41a6ab0e8488a7f8619/
 '''
 from __future__ import print_function, division, absolute_import
 from random import sample
-import DF  
 
 try:
     import Queue as queue # replace with 'import queue' if using Python 3
@@ -195,32 +194,32 @@ def KMedians(data, k, n, distFunc):
     idx = optDist_list.index(min(optDist_list))
     return cluster_list[idx], distToClusterCenter_list[idx]
 
-# ##### Define the distance between Jam A and Jam B; added by Jing Zhang (jingzbu@gmail.com)
+##### Define the distance between Jam A and Jam B; added by Jing Zhang (jingzbu@gmail.com)
 
-# from geopy.distance import vincenty
+from geopy.distance import vincenty
 
-# def DF(A_, B_):
-#     '''
-#     The argument A_ and B_ should be two lists
-#     '''
-#     A_ = np.array(A_)
-#     B_ = np.array(B_)
-#     A = np.reshape(A_, (int(np.size(A_) / 2), 2))
-#     B = np.reshape(B_, (int(np.size(B_) / 2), 2))
-#     len_A = np.size(A, 0)
-#     len_B = np.size(B, 0)
+def DF(A_, B_):
+    '''
+    The argument A_ and B_ should be two lists
+    '''
+    A_ = np.array(A_)
+    B_ = np.array(B_)
+    A = np.reshape(A_, (int(np.size(A_) / 2), 2))
+    B = np.reshape(B_, (int(np.size(B_) / 2), 2))
+    len_A = np.size(A, 0)
+    len_B = np.size(B, 0)
 
-#     dist_AB_ = []
-#     for i in range(len_A):
-#         for j in range(len_B):
-#             jam1 = (A[i,1], A[i,0])
-#             jam2 = (B[j,1], B[j,0])
-#             dist_AB_.append(vincenty(jam1, jam2).meters)
-#     if (len(dist_AB_) > 0):
-#         dist_AB = min(dist_AB_)
-#     else:
-#         dist_AB = 1e8
-#     return dist_AB
+    dist_AB_ = []
+    for i in range(len_A):
+        for j in range(len_B):
+            jam1 = (A[i,1], A[i,0])
+            jam2 = (B[j,1], B[j,0])
+            dist_AB_.append(vincenty(jam1, jam2).meters)
+    if (len(dist_AB_) > 0):
+        dist_AB = min(dist_AB_)
+    else:
+        dist_AB = 1e8
+    return dist_AB
 
 def test():
 #     data = [(5, 6, 8, 9),
@@ -280,6 +279,6 @@ def test():
     # DF = lambda x,y: ((x[0]-y[0]) ** 2) * (256 ** 3) + ((x[1]-y[1]) ** 2) * (256 **2) + ((x[2]-y[2]) ** 2) * (256)+ (x[3]-y[3]) ** 2
     # DF = lambda x,y:(x[0]-y[0]) ** 2  + (x[1]-y[1]) ** 2  + (x[2]-y[2]) ** 2 + (x[3]-y[3]) ** 2
 
-    cluster, distToClusterCenter = KMedians(data, k, n, DF.DF)
+    cluster, distToClusterCenter = KMedians(data, k, n, DF)
     print('cluster, ', cluster)
     print('distToClusterCenter, ', distToClusterCenter)
