@@ -173,7 +173,7 @@ def KMedians_(data, k, distFunc):
         distToClusterCenter.append(distFunc(pt, centerPt[cluster[i]]))
         i += 1
     optDist = sum(distToClusterCenter)
-    return cluster, distToClusterCenter, optDist
+    return cluster, centerPt, distToClusterCenter, optDist
 
 def KMedians(data, k, n, distFunc):
     '''
@@ -183,16 +183,18 @@ def KMedians(data, k, n, distFunc):
     Output also the distance to cluster centers
     '''
     cluster_list = []
+    centerPt_list = []
     distToClusterCenter_list = []
     optDist_list = []
     
     for i in range(n):
         results = KMedians_(data, k, distFunc)
         cluster_list.append(results[0])
-        distToClusterCenter_list.append(results[1])
-        optDist_list.append(results[2])
+	centerPt_list.append(results[1])
+        distToClusterCenter_list.append(results[2])
+        optDist_list.append(results[3])
     idx = optDist_list.index(min(optDist_list))
-    return cluster_list[idx], distToClusterCenter_list[idx]
+    return cluster_list[idx], centerPt_list[idx], distToClusterCenter_list[idx]
 
 ##### Define the distance between Jam A and Jam B; added by Jing Zhang (jingzbu@gmail.com)
 
@@ -266,12 +268,21 @@ def test():
       [-71.195326, 42.345231],
       [-71.195052, 42.345308],
       [-71.194946, 42.345339]])
+
+    DD = np.array([[-71.28705, 42.444783],
+      [-71.285651, 42.445146],
+      [-71.285583, 42.445162],
+      [-71.285322, 42.445230],
+      [-71.285058, 42.445307],
+      [-71.284949, 42.445338]])
+
     A_ = list(np.reshape(AA, np.size(AA)))
     B_ = list(np.reshape(BB, np.size(BB)))
     C_ = list(np.reshape(CC, np.size(CC)))
-    data = [A_, A_, B_, B_, B_, C_, A_, B_, A_, B_, B_, A_, A_, C_, C_]
+    D_ = list(np.reshape(DD, np.size(DD)))
+    data = [A_, A_, B_, B_, B_, C_, D_, B_, A_, B_, B_, A_, A_, C_, D_]
 #     print(data)
-    k = 3
+    k = 4
     n = 10
     
 #     DF = lambda x,y:abs(x[0]-y[0]) * (256**3) + abs(x[1]-y[1]) * (256 **2) + abs(x[2]-y[2]) * 256 + abs(x[3]-y[3])
@@ -279,6 +290,7 @@ def test():
     # DF = lambda x,y: ((x[0]-y[0]) ** 2) * (256 ** 3) + ((x[1]-y[1]) ** 2) * (256 **2) + ((x[2]-y[2]) ** 2) * (256)+ (x[3]-y[3]) ** 2
     # DF = lambda x,y:(x[0]-y[0]) ** 2  + (x[1]-y[1]) ** 2  + (x[2]-y[2]) ** 2 + (x[3]-y[3]) ** 2
 
-    cluster, distToClusterCenter = KMedians(data, k, n, DF)
+    cluster, centerPt, distToClusterCenter = KMedians(data, k, n, DF)
     print('cluster, ', cluster)
+    print('centerPt, ', centerPt)
     print('distToClusterCenter, ', distToClusterCenter)
