@@ -1,2 +1,2 @@
-# WazeJAD
-Waze Jams Anomaly Detection
+# WAJAD
+WAze Jams Anomaly Detection
