@@ -176,7 +176,7 @@ def KMedians_(data, k, distFunc, queue):
     optDist = sum(distToClusterCenter)
     queue.put([cluster, centerPt, distToClusterCenter, optDist])
 
-def KMedians(data, k, distFunc):
+def KMedians(data, k, num_core, distFunc):
     '''
     To determine a relatively stable clustering result, we need to run KMedians_ several times; this
     is done in parallel, thus fully using the multi-cores.
@@ -189,7 +189,6 @@ def KMedians(data, k, distFunc):
     distToClusterCenter_list = []
     optDist_list = []
     
-    num_core = 12
     queue = Queue()
     proc_list = []
     for n in range(num_core):
@@ -298,13 +297,14 @@ def test():
     data = [A_, A_, B_, B_, B_, C_, D_, B_, A_, B_, B_, A_, A_, C_, D_]
 #     print(data)
     k = 4
+    num_core = 12
     
 #     DF = lambda x,y:abs(x[0]-y[0]) * (256**3) + abs(x[1]-y[1]) * (256 **2) + abs(x[2]-y[2]) * 256 + abs(x[3]-y[3])
     # DF = lambda x,y:abs(x[0]-y[0]) * 2 + abs(x[1]-y[1]) * 2 + abs(x[2]-y[2]) * 2+ abs(x[3]-y[3]) * 2
     # DF = lambda x,y: ((x[0]-y[0]) ** 2) * (256 ** 3) + ((x[1]-y[1]) ** 2) * (256 **2) + ((x[2]-y[2]) ** 2) * (256)+ (x[3]-y[3]) ** 2
     # DF = lambda x,y:(x[0]-y[0]) ** 2  + (x[1]-y[1]) ** 2  + (x[2]-y[2]) ** 2 + (x[3]-y[3]) ** 2
 
-    cluster, centerPt, distToClusterCenter = KMedians(data, k, DF)
+    cluster, centerPt, distToClusterCenter = KMedians(data, k, num_core, DF)
     print('cluster, ', cluster)
     print('centerPt, ', centerPt)
     print('distToClusterCenter, ', distToClusterCenter)
