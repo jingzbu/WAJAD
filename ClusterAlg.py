@@ -6,6 +6,7 @@ cf. https://github.com/hbhzwj/GAD/blob/eadf9fe5c8749bb7c091c41a6ab0e8488a7f8619/
 '''
 from __future__ import print_function, division, absolute_import
 from random import sample
+from multiprocessing import Queue, Process
 
 try:
     import Queue as queue # replace with 'import queue' if using Python 3
@@ -156,9 +157,9 @@ def KMeans(data, k, distFunc):
 
     return cluster, centerPt
 
-def KMedians_(data, k, distFunc):
+def KMedians_(data, k, distFunc, queue):
 # def KMeans(data, k, distFunc):
-    print('start KMedians ...')
+    # print('start KMedians ...')
     # Initialize
     centerPt = sample(data, k)
     while True:
@@ -173,12 +174,13 @@ def KMedians_(data, k, distFunc):
         distToClusterCenter.append(distFunc(pt, centerPt[cluster[i]]))
         i += 1
     optDist = sum(distToClusterCenter)
-    return cluster, centerPt, distToClusterCenter, optDist
+    queue.put([cluster, centerPt, distToClusterCenter, optDist])
 
-def KMedians(data, k, n, distFunc):
+def KMedians(data, k, distFunc):
     '''
-    To determine a relatively stable clustering result, we need to run the algorithm several times, 
-    and n is the number of running times. 
+    To determine a relatively stable clustering result, we need to run KMedians_ several times; this
+    is done in parallel, thus fully using the multi-cores.
+    cf. http://stackoverflow.com/questions/28530705/how-to-use-pythons-multiprocessing-module
     ----
     Output also the distance to cluster centers
     '''
@@ -187,10 +189,23 @@ def KMedians(data, k, n, distFunc):
     distToClusterCenter_list = []
     optDist_list = []
     
-    for i in range(n):
-        results = KMedians_(data, k, distFunc)
+    num_core = 12
+    queue = Queue()
+    proc_list = []
+    for n in range(num_core):
+        proc_list.append(Process(target=KMedians_, args=(data, k, distFunc, queue,)))
+    for p in proc_list:
+        p.start()
+    result_list = []
+    for i in range(num_core):
+        result_list.append(queue.get())
+    for p in proc_list:
+        p.join()
+    
+    for n in range(num_core):
+        results = result_list[n]
         cluster_list.append(results[0])
-	centerPt_list.append(results[1])
+        centerPt_list.append(results[1])
         distToClusterCenter_list.append(results[2])
         optDist_list.append(results[3])
     idx = optDist_list.index(min(optDist_list))
@@ -283,14 +298,13 @@ def test():
     data = [A_, A_, B_, B_, B_, C_, D_, B_, A_, B_, B_, A_, A_, C_, D_]
 #     print(data)
     k = 4
-    n = 10
     
 #     DF = lambda x,y:abs(x[0]-y[0]) * (256**3) + abs(x[1]-y[1]) * (256 **2) + abs(x[2]-y[2]) * 256 + abs(x[3]-y[3])
     # DF = lambda x,y:abs(x[0]-y[0]) * 2 + abs(x[1]-y[1]) * 2 + abs(x[2]-y[2]) * 2+ abs(x[3]-y[3]) * 2
     # DF = lambda x,y: ((x[0]-y[0]) ** 2) * (256 ** 3) + ((x[1]-y[1]) ** 2) * (256 **2) + ((x[2]-y[2]) ** 2) * (256)+ (x[3]-y[3]) ** 2
     # DF = lambda x,y:(x[0]-y[0]) ** 2  + (x[1]-y[1]) ** 2  + (x[2]-y[2]) ** 2 + (x[3]-y[3]) ** 2
 
-    cluster, centerPt, distToClusterCenter = KMedians(data, k, n, DF)
+    cluster, centerPt, distToClusterCenter = KMedians(data, k, DF)
     print('cluster, ', cluster)
     print('centerPt, ', centerPt)
     print('distToClusterCenter, ', distToClusterCenter)
