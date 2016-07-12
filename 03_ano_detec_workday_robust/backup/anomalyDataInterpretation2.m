@@ -423,7 +423,7 @@ for i = 1:length(refinedIndices)
     testIndex = refinedIndices(i);
 
     % Using the index, retrieve its information
-    a = find(testIndices == testIndex);
+    a = testIndices == testIndex;
     
     % Extract data for a specific index
     info = testData{a};
