@@ -1,4 +1,4 @@
-function [TPR,ValidIndicesMatrix] = anomalyDataInterpretation3(dist_threshold,time_threshold)
+function [TPR, ValidIndicesMatrix] = anomalyDataInterpretation3(dist_threshold, time_threshold, test_data, points_data, alerts_data, ano_data)
 % Athanasios Tsiligkaridis, July 2nd 2016
 %{
     INPUTS:  1) Distance threshold (in meters) 
@@ -42,7 +42,7 @@ function [TPR,ValidIndicesMatrix] = anomalyDataInterpretation3(dist_threshold,ti
 num_closeneighbors = 10;
 
 %% 1) Import test data from "sample_path_jam_test_data_sorted.json"
-dat = loadjson(['sample_path_jam_test_data_sorted.json']);
+dat = loadjson(test_data);
 testData = struct2cell(dat);
 names = fieldnames(dat);
 testIndices = zeros(1,length(names));
@@ -55,7 +55,7 @@ end
 
 %% 2) Form refined indices vector. 
 
-anoDict = load('anoDict.mat');
+anoDict = load(ano_data);
 FieldName = fieldnames(anoDict);
 
 refinedIndices = zeros(length(FieldName), 1);
@@ -64,12 +64,12 @@ for i = 1:length(FieldName)
 end
 
 %% 3) Import uuid point data from .json file -> 
-a=load('points_dict_Mar_16_2016.mat');
+a=load(points_data);
 uuidPoints = struct2cell(a);
 
 %% 4) Form data structure with information from each accident
 % Get data from mat file.
-A = load('filteredAlerts.mat');
+A = load(alerts_data);
 alert_information = struct2cell(A);
 accidentInfo = cell(length(alert_information),1);
 for x = 1:length(alert_information)
