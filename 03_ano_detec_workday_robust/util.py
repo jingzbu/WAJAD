@@ -545,9 +545,9 @@ def HoeffdingRuleMarkovRobust(beta, G_1, H_1, U_1, G_2, H_2, U_2, G_3, H_3, U_3,
         t_3 = (1.0 / sqrt(FlowNum)) * np.dot(G_3, U_3[0, j, :]) + \
                 (1.0 / 2) * (1.0 / FlowNum) * \
                     np.dot(np.dot(U_3[0, j, :], H_3), U_3[0, j, :])
-	t1 = np.array(t_1.real)[0]
-	t2 = np.array(t_2.real)[0]
-	t3 = np.array(t_3.real)[0]
+        t1 = np.array(t_1.real)[0]
+        t2 = np.array(t_2.real)[0]
+        t3 = np.array(t_3.real)[0]
         # print t.tolist()
         # break
         KL.append(min([t1, t2, t3]))
@@ -574,7 +574,7 @@ def HoeffdingRuleMarkovRobust_(beta, G_list, H_list, U_list, FlowNum):
     # Estimate K-L divergence using 2nd-order Taylor expansion
     KL = []
     for j in range(0, SampNum):
-	KL_est_list = []
+        KL_est_list = []
         for G, H, U in zip(G_list, H_list, U_list):
             KL_est = (1.0 / sqrt(FlowNum)) * np.dot(G, U[0, j, :]) + \
                      (1.0 / 2) * (1.0 / FlowNum) * \
@@ -724,25 +724,25 @@ class ThresBaseRobust(object):
         self.n = n  # n is the number of samples
         self.mu_01 = mu_01
         self.mu_1 = mu_1
-	self.mu_11 = mu_11
-	self.P_11 = P_11
-	self.G_11 = G_11
-	self.H_11 = H_11
-	self.U_11 = U_11
-	self.mu_02 = mu_02
-	self.mu_2 = mu_2
-	self.mu_12 = mu_12
-	self.P_12 = P_12
-	self.G_12 = G_12
-	self.H_12 = H_12
-	self.U_12 = U_12
-	self.mu_03 = mu_03
-	self.mu_3 = mu_3
-	self.mu_13 = mu_13
-	self.P_13 = P_13
-	self.G_13 = G_13
-	self.H_13 = H_13
-	self.U_13 = U_13
+        self.mu_11 = mu_11
+        self.P_11 = P_11
+        self.G_11 = G_11
+        self.H_11 = H_11
+        self.U_11 = U_11
+        self.mu_02 = mu_02
+        self.mu_2 = mu_2
+        self.mu_12 = mu_12
+        self.P_12 = P_12
+        self.G_12 = G_12
+        self.H_12 = H_12
+        self.U_12 = U_12
+        self.mu_03 = mu_03
+        self.mu_3 = mu_3
+        self.mu_13 = mu_13
+        self.P_13 = P_13
+        self.G_13 = G_13
+        self.H_13 = H_13
+        self.U_13 = U_13
 
 class ThresWeakConvRobust(ThresBaseRobust):
     """ Estimating the K-L divergence and threshold by use of weak convergence
