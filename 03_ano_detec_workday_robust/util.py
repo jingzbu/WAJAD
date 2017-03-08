@@ -96,7 +96,7 @@ def plot_seg(X, Y, flag, marker=None, *args, **kwargs):
 def plot_points(X, Y, threshold=None,  pic_show=False,
         pic_name=None, figure_=False, subplot_=111, title_ = None,
         xlabel_ = 'x', ylabel_ = 'y',
-        ano_marker=['b-', 'r-'], threshold_marker='g--',
+        ano_marker=['b:', 'r-'], threshold_marker='g--',
         xlim_=None, ylim_=None,
         *args, **kwargs):
     """ plot points and lines is a customized way for showing anomalies
@@ -163,7 +163,7 @@ def plot_points(X, Y, threshold=None,  pic_show=False,
     if title_:
         plt.title(title_)
 
-    if pic_name: plt.savefig(pic_name)
+    if pic_name: plt.savefig(pic_name, dpi=300, bbox_inches="tight")
     if pic_show: plt.show()
 ###########################################################################################################
 
